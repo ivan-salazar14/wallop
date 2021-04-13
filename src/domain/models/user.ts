@@ -1,37 +1,39 @@
 
 import mongoose, { Schema, Document } from 'mongoose';
 
-export enum Gender {
+/* export enum Gender {
     male = 'male',
     female = 'female',
     undisclosed = 'undisclosed'
-}
-
-export interface Address extends Document {
+} */
+/* export interface Address extends Document {
     street: string;
     city: string;
     postCode: string;
 }
-
+ */
 export interface IUser extends Document {
-    email: string;
-    firstName: string;
+    //   email: string;
+    name: string;
     lastName: string;
-    gender?: Gender;
-    address?: Address;
+    username: string;
+    password: string;
+    prefer_coin: string;
+    //   gender?: Gender;
 }
 
 const UserSchema: Schema = new Schema({
-    email: { type: String, required: true, unique: true },
-    firstName: { type: String, required: true },
+    name: { type: String, required: true },
     lastName: { type: String, required: true },
-    // Gets the Mongoose enum from the TypeScript enum
-    gender: { type: String, enum: Object.values(Gender) },
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true, unique: true },
+    prefer_coin: { type: String, required: true, unique: true },
+    /*  gender: { type: String, enum: Object.values(Gender) },
     address: {
         street: { type: String },
         city: { type: String },
         postCode: { type: String }
-    }
+    } */
 });
 
 // Export the model and return your IUser interface

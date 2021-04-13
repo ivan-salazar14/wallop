@@ -1,28 +1,15 @@
 import User, { IUser } from '../models/user';
 import { CreateQuery } from 'mongoose';
 import { body, validationResult } from 'express-validator/check';
+import Binance from 'node-binance-api'
 
-async function CreateUser({
-    name,
-    lastName,
-    username,
-    password,
-    prefer_coin
-}: CreateQuery<IUser>): Promise<IUser> {
+const binance = new Binance().options({});
+async function getMarket(): Promise<any> {
+    let ticker = await binance.prices();
+    console.info(`Price of BNB: ${ticker.BNBUSDT}`);
 
-    return User.create({
-        name,
-        lastName,
-        username,
-        password,
-        prefer_coin
-    })
-        .then((data: IUser) => {
-            return data;
-        })
-        .catch((error: Error) => {
-            throw error;
-        });
+    return ticker;
+
 }
 
 const userValidationRules = () => {
@@ -48,7 +35,7 @@ const validate = (req, res, next) => {
 }
 
 export default {
-    CreateUser,
+    getMarket,
     validate,
     userValidationRules
 };

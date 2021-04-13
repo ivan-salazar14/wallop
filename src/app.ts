@@ -6,11 +6,21 @@ import { EventEmitter } from 'events';
 import cors from "cors";
 import helmet from "helmet";
 import routes from "./routes";
+import { ApolloServer } from 'apollo-server-express'
+import { typeDefs, resolvers } from './schema;
+
 class App {
 
-    public server;
+
+    public app;
+    public server,
     constructor() {
-        this.server = express()
+        this.server = new ApolloServer({});
+
+        // await server.start();
+
+
+        this.app = express()
         this.middlewares();
         this.routes();
     }

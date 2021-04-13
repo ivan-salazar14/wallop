@@ -1,7 +1,9 @@
-export type market = {
+import mongoose, { Schema, Document } from 'mongoose';
 
-    pair: string,
-    baseName: string,
+export interface market extends Document {
+    symbol: string,
+    name: string,
     price: string,
-    volumen: number
+    volumen: number,
+    last_update: Date
 }

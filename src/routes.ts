@@ -1,29 +1,22 @@
 import { Router } from 'express';
 import UserController from './domain/services/user';
+import binanceController from './domain/services/binance';
 import { body, check, validationResult } from 'express-validator';
+import userApi from './api/user'
+
+
 const routes = Router();
+
+
 routes.get('/', (req, res) => {
     return res.json({ message: 'Hello World' });
 });
 
-routes.post('/user',
-    UserController.userValidationRules(),
-    UserController.validate,
-    async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
-        const user = await UserController.CreateUser({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email
-        });
+routes.use('/v1', userApi);
 
-        return res.send({ user });
-    });
-
-routes.get('/market', function (req, res) {
+routes.get('/market', async (req, res) => {
+    const ticker = await binanceController.getMarket();
+    return res.send({ ticker });
     res.send('get all market')
 })
 routes.route('/trade/:id')
