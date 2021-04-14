@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import UserController from './domain/services/user';
-import binanceController from './domain/services/binance';
+import coinGeckoController from './domain/services/coingekco';
 import { body, check, validationResult } from 'express-validator';
 import userApi from './api/user'
+import auth from './api/auth'
+import monitor from './api/monitor'
 
 
 const routes = Router();
@@ -13,12 +15,16 @@ routes.get('/', (req, res) => {
 });
 
 routes.use('/v1', userApi);
+routes.use('/v1', auth);
+routes.use('/v1', monitor);
 
-routes.get('/market', async (req, res) => {
-    const ticker = await binanceController.getMarket();
+/* routes.get('/market', async (req, res) => {
+    let accessToken = req.cookies.jwt;
+    console.log(accessToken)
+    const ticker = await coinGeckoController.getMarket(accessToken);
     return res.send({ ticker });
     res.send('get all market')
-})
+}) */
 routes.route('/trade/:id')
     .get(function (req, res) {
         res.send('get one trade')

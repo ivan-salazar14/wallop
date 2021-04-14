@@ -13,7 +13,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 }
  */
 export interface IUser extends Document {
-    //   email: string;
     name: string;
     lastName: string;
     username: string;
@@ -23,11 +22,11 @@ export interface IUser extends Document {
 }
 
 const UserSchema: Schema = new Schema({
-    name: { type: String, required: true },
-    lastName: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true, unique: true },
-    prefer_coin: { type: String, required: true, unique: true },
+    name: { type: String, required: [true, 'Enter a name.'] },
+    lastName: { type: String, required: [true, 'Enter a lastname.'] },
+    username: { type: String, required: [true, 'Enter a username.'], unique: [true, 'That username is taken.'] },
+    password: { type: String, required: [true, 'Enter a password.'], unique: true },
+    prefer_coin: { type: String, required: [true, 'Enter a prefered coin.'] },
     /*  gender: { type: String, enum: Object.values(Gender) },
     address: {
         street: { type: String },

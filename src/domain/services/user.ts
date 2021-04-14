@@ -1,7 +1,8 @@
 import User, { IUser } from '../models/user';
 import { CreateQuery } from 'mongoose';
 import { body, validationResult } from 'express-validator/check';
-
+import bcrypt from "bcrypt";
+const saltRounds = 10;
 async function CreateUser({
     name,
     lastName,
@@ -10,14 +11,19 @@ async function CreateUser({
     prefer_coin
 }: CreateQuery<IUser>): Promise<IUser> {
 
+    let hash = await bcrypt.hash(password, saltRounds)//.then(hash => {
+    console.log(hash)
     return User.create({
         name,
         lastName,
         username,
-        password,
+        password: hash,
         prefer_coin
     })
         .then((data: IUser) => {
+            data.password = undefined
+            data.__v = undefined
+            data._id = undefined
             return data;
         })
         .catch((error: Error) => {
@@ -27,10 +33,11 @@ async function CreateUser({
 
 const userValidationRules = () => {
     return [
-        // username must be an email
-        body('email').isEmail(),
-        // password must be at least 5 chars long
-        body('firstName').isLength({ min: 5 }),
+        body('name').isString().isLength({ min: 3 }),
+        body('lastName').isString().isLength({ min: 3 }),
+        body('username').isString().isLength({ min: 4 }).toLowerCase(),
+        body('password').isLength({ min: 8 }).isAlphanumeric(),//.isStrongPassword(),
+        //  body('prefer_coin').isMongoId(),
     ]
 }
 

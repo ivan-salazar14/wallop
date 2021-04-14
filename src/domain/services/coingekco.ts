@@ -1,17 +1,23 @@
 import User, { IUser } from '../models/user';
 import { CreateQuery } from 'mongoose';
 import { body, validationResult } from 'express-validator/check';
-import Binance from 'node-binance-api'
+import axios from "axios";
 
-const binance = new Binance().options({});
-async function getMarket(): Promise<any> {
-    let ticker = await binance.prices();
-    console.info(`Price of BNB: ${ticker.BNBUSDT}`);
+async function getMarket(token: string): Promise<any> {
+    let currency =
+        axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false")
+            .then(res => {
 
-    return ticker;
+                const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
+                console.log('Status Code:', res.status);
+                console.log('Date in Response header:', headerDate);
+                //    console.log(res.data);
+
+                return res.data.body;
+            })
 
 }
-
+/* 
 const userValidationRules = () => {
     return [
         // username must be an email
@@ -32,10 +38,10 @@ const validate = (req, res, next) => {
     return res.status(422).json({
         errors: extractedErrors,
     })
-}
+} */
 
 export default {
     getMarket,
-    validate,
-    userValidationRules
+    /*  validate,
+     userValidationRules */
 };

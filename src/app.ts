@@ -6,21 +6,13 @@ import { EventEmitter } from 'events';
 import cors from "cors";
 import helmet from "helmet";
 import routes from "./routes";
-import { ApolloServer } from 'apollo-server-express'
-import { typeDefs, resolvers } from './schema;
-
+import cookieParser from 'cookie-parser';
+require('dotenv').config()
 class App {
-
-
     public app;
-    public server,
+    public server;
     constructor() {
-        this.server = new ApolloServer({});
-
-        // await server.start();
-
-
-        this.app = express()
+        this.server = express()
         this.middlewares();
         this.routes();
     }
@@ -29,9 +21,8 @@ class App {
         this.server.use(express.json());
         this.server.use(cors());
         this.server.use(helmet());
+        this.server.use(cookieParser());
         this.server.set('eventEmitter', EventEmitter);
-        // access it from any module of the application
-        // console.log(app.get('eventEmitter'));
     }
 
     routes() {
