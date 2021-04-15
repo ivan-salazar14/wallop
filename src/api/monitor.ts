@@ -10,15 +10,21 @@ authRouter.get('/coins',
     /*   coinController.userValidationRules(),
       coinController.validate, */
     async (req, res) => {
-        let accessToken = req.cookies.jwt;
-        console.log(accessToken)
+        let accessToken = req.headers['authorization']
+
+        console.log('accessToken', req.body)
         /*    const errors = validationResult(req);
            if (!errors.isEmpty()) {
                return res.status(422).json({ errors: errors.array() });
            } */
-        const user = await coinController.getMarket(accessToken);
+        try {
 
-        return res.send({ user });
+            const user = await coinController.getMarket(accessToken);
+            return res.send({ user });
+        } catch (error) {
+            return res.status(422).json({ errors: error });
+        }
+
     });
 
 export default authRouter;

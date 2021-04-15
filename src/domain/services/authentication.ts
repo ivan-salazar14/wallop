@@ -40,8 +40,6 @@ async function Login({ username, password }): Promise<Authentication.Result> {
     }
 
     let compared = await bcrypt.compare(password, finded.password);
-    console.log('compared ', compared)
-
 
     if (compared) {
 

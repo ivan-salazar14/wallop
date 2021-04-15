@@ -10,7 +10,7 @@ export default ({ db }: TInput) => {
         mongoose
             .connect(
                 db,
-                { useUnifiedTopology: true, useNewUrlParser: true }
+                { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false }
             )
             .then(() => {
                 return console.info(`Successfully connected to ${db}`);

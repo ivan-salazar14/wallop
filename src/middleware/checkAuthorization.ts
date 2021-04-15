@@ -2,18 +2,21 @@ import jwt from "jsonwebtoken";
 
 
 const verify = (req, res, next) => {
-    const authHeader = req.headers['authorization']
-    let accessToken = req.cookies.jwt    //    const token = authHeader && authHeader.split(' ')[1]
+    let authHeader = req.headers['authorization']
 
-    if (accessToken == null) return res.sendStatus(403)
+    console.log('authHeader', authHeader)
+    if (authHeader == null) return res.sendStatus(403)
 
     try {
-        jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string, (err: any, user: any) => {
+        authHeader = authHeader.replace('Bearer ', '')
+        console.log('authHeader', authHeader)
+
+        jwt.verify(authHeader, process.env.ACCESS_TOKEN_SECRET as string, (err: any, user: any) => {
             console.log(err)
 
             if (err) return res.sendStatus(403)
 
-            req.user = user
+            req.body = user
 
             next();
         })

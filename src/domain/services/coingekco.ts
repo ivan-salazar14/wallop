@@ -3,14 +3,23 @@ import { CreateQuery } from 'mongoose';
 import { body, validationResult } from 'express-validator/check';
 import axios from "axios";
 
-async function getMarket(token: string): Promise<any> {
+async function getMarket(prefer_coin: string, page: number = 1): Promise<any> {
     let currency =
-        axios.get("https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&order=market_cap_desc&per_page=100&page=1&sparkline=false")
+        axios.get("https://api.coingecko.com/api/v3/coins/markets", {
+            params: {
+                per_page: 100,
+                page: page,
+                order: "market_cap_desc",
+                sparkline: false,
+                vs_currency: prefer_coin
+            }
+        })
             .then(res => {
 
                 const headerDate = res.headers && res.headers.date ? res.headers.date : 'no response date';
                 console.log('Status Code:', res.status);
                 console.log('Date in Response header:', headerDate);
+                console.log('body:', res.data.body);
                 //    console.log(res.data);
 
                 return res.data.body;
