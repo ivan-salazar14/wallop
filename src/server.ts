@@ -9,8 +9,8 @@ const port = 3000
 const db = 'mongodb://localhost:27017/wallop';
 connect({ db });
 
-//updateCoinsDatabase();
-//updateCurrenciesDatabase();
+updateCoinsDatabase();
+updateCurrenciesDatabase();
 //updatePricesCoinsDatabase();
 
 //setInterval(refreshMarket, 2000);

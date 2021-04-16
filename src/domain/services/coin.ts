@@ -20,8 +20,7 @@ async function CreateCoin({
     name
 }: CreateQuery<Icoin>): Promise<Icoin> {
 
-
-    const filter = { id: id };
+    const filter = { symbol: symbol };
     const update = {
         id,
         symbol,

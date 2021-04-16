@@ -26,8 +26,6 @@ async function Login({ username, password }): Promise<Authentication.Result> {
 
     let finded = await User.findOne({ username: username }).exec();
 
-    console.log(finded);
-
     let result = <Authentication.Result>{}
 
     if (!finded) {

@@ -27,7 +27,8 @@ userRouter.post('/user',
 
             return res.send({ user });
         } catch (error) {
-            return res.status(422).json({ errors: error });
+
+            return res.status(422).json({ message: "error en los campos", fields: error.keyValue });
         }
     });
 
