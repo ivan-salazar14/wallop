@@ -11,5 +11,4 @@ const UserSchema: Schema = new Schema({
 
 });
 
-// Export the model and return your IUser interface
 export default mongoose.model<Icurrency>('Currency', UserSchema);

@@ -3,7 +3,6 @@ import { Mongoose } from 'mongoose';
 import { body, validationResult } from 'express-validator/check';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const saltRounds = 10;
 
 export interface Authentication {
     auth: (authenticationParams: Authentication.Params) => Promise<Authentication.Result>
@@ -47,16 +46,9 @@ async function Login({ username, password }): Promise<Authentication.Result> {
             algorithm: "HS256",
             expiresIn: process.env.ACCESS_TOKEN_LIFE
         })
-
-        //create the refresh token with the longer lifespan
-        let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-            algorithm: "HS256",
-            expiresIn: process.env.REFRESH_TOKEN_LIFE
-        })
         result.accessToken = accessToken;
         result.expiresIn = process.env.ACCESS_TOKEN_LIFE;
-        //store the refresh token in the user array
-        // users[username].refreshToken = refreshToken
+
         return result
 
     } else {

@@ -18,19 +18,24 @@ const getCoins = async () => {
 
 
 const updateCoinsDatabase = async () => {
-    const coins = await getCoins()
-    if (coins) {
-        try {
+    try {
+        const coins = await getCoins()
+        if (coins) {
             coins.data.forEach(async element => {
-                const user = await coinController.CreateCoin({
+                const result = await coinController.CreateCoin({
                     symbol: element.symbol,
                     name: element.name,
                     id: element.id
                 });
+                if (!result) {
+                    let resp = "Username does not exist";
+                    return resp;
+                }
             });
-        } catch (error) {
-            console.log('error on update coins', error)
+
         }
+    } catch (error) {
+        console.log('error on update coins', error)
     }
 }
 export default updateCoinsDatabase;

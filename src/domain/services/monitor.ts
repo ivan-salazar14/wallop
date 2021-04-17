@@ -1,7 +1,7 @@
 import Coin, { Icoin } from '../models/coin';
 import { body, validationResult } from 'express-validator/check';
 import User, { IUser } from "../models/user";
-import marketController from "./coingekco";
+import marketController from "./market";
 const saltRounds = 10;
 
 /* const followCoin = function ({ username, coin }) {
@@ -12,13 +12,24 @@ const saltRounds = 10;
     );
 }; */
 
-async function follow({ username, symbol }): Promise<IUser> {
+async function follow({ username, symbol }): Promise<String> {
     let finded = await Coin.findOne({ symbol: symbol }).exec();
-    let created = await User.findOneAndUpdate(
-        username,
-        { $push: { following: finded._id } }
-    );
-    return created;
+    let findedUser = await User.findOne(
+        {
+            username,
+            following: {
+                $elemMatch: { $eq: finded._id }
+            }
+        }).exec();
+    if (!findedUser) {
+        await User.findOneAndUpdate(
+            username,
+            { $push: { following: finded._id } },
+            { new: true, upsert: true, useFindAndModify: false }
+        );
+        return 'following a new currency';
+    } else
+        return 'you already follow this coin';
 }
 
 async function following(username: string, order: Number): Promise<any[]> {
@@ -27,16 +38,15 @@ async function following(username: string, order: Number): Promise<any[]> {
         let findedUser = await User.findOne({ username }).exec();
         let findedCoins = await Coin.find({ _id: findedUser.following }).select('id symbol name -_id').sort({ symbol: order });
         let filtered = "";
+
         findedCoins.forEach(element => {
 
             filtered += element.id + ","
         });
+
         filtered = filtered.slice(0, -1);
         let coinPrices = await marketController.coinPrices(filtered, findedUser.prefer_coin + "," + process.env.COINS_DEFAULT);
 
-        console.log('coinprces', coinPrices);
-        /*   console.log('findedCoins', findedCoins);
-    */
         let result = []
         for (var currency in coinPrices) {
 
@@ -44,7 +54,7 @@ async function following(username: string, order: Number): Promise<any[]> {
             let actual = findedCoins.filter((ob) => {
                 return ob.id == currency
             });
-            console.log('finded', actual)
+
             result.push({
                 symbol: actual[0].symbol,
                 name: actual[0].name,

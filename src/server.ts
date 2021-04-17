@@ -4,9 +4,8 @@ import updateCoinsDatabase from "./events/coinList";
 import updateCurrenciesDatabase from "./events/currencyList";
 import updatePricesCoinsDatabase from "./events/updatepriceCoins";
 
-
-const port = 3000
-const db = 'mongodb://localhost:27017/wallop';
+const port = process.env.PORT
+const db = process.env.DB_DRIVER + '://' + process.env.DB_HOST + ':' + process.env.DB_PORT + '/' + process.env.DB_NAME;
 connect({ db });
 
 updateCoinsDatabase();

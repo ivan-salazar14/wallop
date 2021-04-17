@@ -17,6 +17,4 @@ const UserSchema: Schema = new Schema({
     users: [{ type: Schema.Types.ObjectId, ref: user }]
 
 });
-
-// Export the model and return your IUser interface
 export default mongoose.model<Icoin>('Coin', UserSchema);

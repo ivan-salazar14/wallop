@@ -3,13 +3,11 @@
 import { Router } from 'express';
 import UserController from '../domain/services/user';
 import { validationResult } from 'express-validator';
-import { verify } from "../middleware/checkAuthorization";
 const userRouter = Router();
 
 userRouter.post('/user',
     UserController.userValidationRules(),
     UserController.validate,
-    //   verify,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

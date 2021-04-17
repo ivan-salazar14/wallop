@@ -27,7 +27,7 @@ const UserSchema: Schema = new Schema({
     username: { type: String, required: [true, 'Enter a username.'], unique: [true, 'That username is taken.'] },
     password: { type: String, required: [true, 'Enter a password.'], index: { unique: true } },
     prefer_coin: { type: String, required: [true, 'Enter a prefered coin.'] },
-    following: [{ type: Schema.Types.ObjectId, ref: coin, unique: true }]
+    following: [{ type: Schema.Types.ObjectId, ref: 'Coin' }]
 });
 
 // Export the model and return your IUser interface

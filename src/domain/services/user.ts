@@ -12,7 +12,6 @@ async function CreateUser({
 }: CreateQuery<IUser>): Promise<IUser> {
 
     let hash = await bcrypt.hash(password, saltRounds)//.then(hash => {
-    console.log(hash)
     return User.create({
         name,
         lastName,
@@ -36,8 +35,7 @@ const userValidationRules = () => {
         body('name').isString().isLength({ min: 3 }),
         body('lastName').isString().isLength({ min: 3 }),
         body('username').isString().isLength({ min: 4 }).toLowerCase(),
-        body('password').isLength({ min: 8 }).isAlphanumeric(),//.isStrongPassword(),
-        //  body('prefer_coin').isMongoId(),
+        body('password').isLength({ min: 8 }).isAlphanumeric(),
     ]
 }
 
