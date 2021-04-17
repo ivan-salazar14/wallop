@@ -17,6 +17,20 @@ authRouter.get('/coins',
         }
 
     });
+authRouter.get('/follow',
+    verify,
+    async (req, res) => {
+        try {
+            console.log('order', req.query.order)
+            const market = await monitorController.following(req['user'].username, Number(req.query.order));
+            return res.send(market);
+
+        } catch (error) {
+            return res.status(422).json({ errors: error });
+        }
+
+    })
+
 
 authRouter.post('/follow',
     verify,
@@ -28,12 +42,6 @@ authRouter.post('/follow',
             if (!errors.isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
             }
-            console.log("user :")
-            console.log(req.user)
-            console.log(req.body.symbol)
-
-
-
             const market = await monitorController.follow({ username: req['user'].username, symbol: req.body.symbol });
             return res.send(market);
 

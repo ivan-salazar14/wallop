@@ -19,6 +19,20 @@ async function getMarket(prefer_coin: string, page: number = 1, per_page: number
     return currency;
 
 }
+
+const coinPrices = async (ids: string, prefer_coin: string) => {
+    return axios.get("https://api.coingecko.com/api/v3/simple/price", {
+        params: {
+            ids,
+            vs_currencies: prefer_coin,
+            include_last_updated_at: true
+        }
+    }).then(async res => {
+        return res.data;
+    }
+    )
+}
 export default {
     getMarket,
+    coinPrices
 };
