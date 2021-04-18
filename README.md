@@ -20,7 +20,7 @@ yarn start:dev
 
 I am separated this application into 5 different layers
 
-Domain (highest)
+Domain.
     -> models
     -> Use cases (services)
 

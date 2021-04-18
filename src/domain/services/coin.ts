@@ -14,10 +14,32 @@ async function getCoins(): Promise<string> {
     return filtered.slice(0, -1);
 }
 
+const setImage = async (symbol: string, image: string) => {
+
+    const filter = { symbol: symbol };
+    const update = {
+        symbol,
+        image
+    };
+
+    return Coin.findOneAndUpdate(filter, update, {
+        new: true,
+        upsert: true // Make this update into an upsert
+    })
+        .then((data: Icoin) => {
+            data.__v = undefined
+            data._id = undefined
+            return data;
+        })
+        .catch((error: Error) => {
+            throw error;
+        });
+}
 async function CreateCoin({
     id,
     symbol,
-    name
+    name,
+    image
 }: CreateQuery<Icoin>): Promise<Icoin> {
 
     const filter = { symbol: symbol };
@@ -25,6 +47,7 @@ async function CreateCoin({
         id,
         symbol,
         name,
+        image,
         last_update: new Date(),
     };
 
@@ -66,5 +89,6 @@ export default {
     CreateCoin,
     getCoins,
     validate,
+    setImage,
     coinValidationRules
 };

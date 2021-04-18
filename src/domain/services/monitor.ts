@@ -4,14 +4,6 @@ import User, { IUser } from "../models/user";
 import marketController from "./market";
 const saltRounds = 10;
 
-/* const followCoin = function ({ username, coin }) {
-    return User.findByIdAndUpdate(
-        username,
-        { $push: { following: coin._id } },
-        { new: true, useFindAndModify: false }
-    );
-}; */
-
 async function follow({ username, symbol }): Promise<String> {
     let finded = await Coin.findOne({ symbol: symbol }).exec();
     let findedUser = await User.findOne(
@@ -32,39 +24,28 @@ async function follow({ username, symbol }): Promise<String> {
         return 'you already follow this coin';
 }
 
-async function following(username: string, order: Number): Promise<any[]> {
+async function following(username: string, order: Number = -1, quantity: number): Promise<any[]> {
 
     try {
         let findedUser = await User.findOne({ username }).exec();
-        let findedCoins = await Coin.find({ _id: findedUser.following }).select('id symbol name -_id').sort({ symbol: order });
+        let findedCoins = await Coin.find({ _id: findedUser.following }).select('id symbol name -_id').sort({ symbol: order }).limit(quantity);
         let filtered = "";
+        let result = [];
 
         findedCoins.forEach(element => {
-
             filtered += element.id + ","
         });
-
         filtered = filtered.slice(0, -1);
         let coinPrices = await marketController.coinPrices(filtered, findedUser.prefer_coin + "," + process.env.COINS_DEFAULT);
 
-        let result = []
-        for (var currency in coinPrices) {
-
-            console.log(currency + ": " + coinPrices[currency][findedUser.prefer_coin]);
-            let actual = findedCoins.filter((ob) => {
-                return ob.id == currency
-            });
-
+        findedCoins.forEach(element => {
             result.push({
-                symbol: actual[0].symbol,
-                name: actual[0].name,
-                price_prefer_coin: coinPrices[currency][findedUser.prefer_coin],
-                price_usd: coinPrices[currency]['usd'],
-                price_ars: coinPrices[currency]['ars'],
-                price_eur: coinPrices[currency]['eur'],
-                last_updated: coinPrices[currency]['last_updated_at']
+                symbol: element.symbol,
+                name: element.name,
+                prices: coinPrices[element.name.toLowerCase()],
+                image: element.image
             })
-        }
+        });
         return result;
     } catch (error) {
         return error;

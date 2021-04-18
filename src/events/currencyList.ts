@@ -1,26 +1,17 @@
 import axios from "axios";
-import currencyController from "../domain/services/currency";
+import currencyService from "../domain/services/currency";
+import marketService from "../domain/services/market";
 
 interface currencyList {
     symbol: string;
 }
-const getCurrencies = async () => {
-    try {
-        return await axios.get("https://api.coingecko.com/api/v3/simple/supported_vs_currencies")
-        console.log('call api to update market')
-
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 
 const updateCurrenciesDatabase = async () => {
-    const currencies = await getCurrencies()
+    const currencies = await marketService.getCurrencies()
     if (currencies) {
         try {
             currencies.data.forEach(async element => {
-                const user = await currencyController.CreateCurrency({
+                await currencyService.CreateCurrency({
                     symbol: element
                 });
             });

@@ -6,13 +6,11 @@ import updatePricesCoinsDatabase from "./events/updatepriceCoins";
 
 const port = process.env.PORT
 const db = process.env.DB_DRIVER + '://' + process.env.DB_HOST + ':' + process.env.DB_PORT + '/' + process.env.DB_NAME;
+
 connect({ db });
-
-updateCoinsDatabase();
-updateCurrenciesDatabase();
+setInterval(updateCoinsDatabase, Number(process.env.TIME_UPDATE_COINS));
+setInterval(updateCurrenciesDatabase, Number(process.env.TIME_UPDATE_COINS));
 //updatePricesCoinsDatabase();
-
-//setInterval(refreshMarket, 2000);
 
 app.listen(port, () => {
     console.log(`app listening at http://localhost:${port}`)

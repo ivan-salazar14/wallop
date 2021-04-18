@@ -9,8 +9,6 @@ interface coinList {
 }
 const updatePrices = async (id: string, vs_currencies: string) => {
     try {
-
-
         const prices = await axios.get("https://api.coingecko.com/api/v3/simple/price", {
             params: {
                 id: id,

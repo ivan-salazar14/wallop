@@ -1,13 +1,21 @@
 
 
 import { Router } from 'express';
-import UserController from '../domain/services/user';
+import UserService from '../domain/services/user';
 import { validationResult } from 'express-validator';
 const userRouter = Router();
 
+/*
+Endpoint to create a user. 
+
+@params name : name of user.
+@params lastname : lastname of user.
+@params password : password of user.
+@params prefer_coin : currency preferred by the user.
+*/
 userRouter.post('/user',
-    UserController.userValidationRules(),
-    UserController.validate,
+    UserService.userValidationRules(),
+    UserService.validate,
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -15,7 +23,7 @@ userRouter.post('/user',
         }
         try {
 
-            const user = await UserController.CreateUser({
+            const user = await UserService.CreateUser({
                 name: req.body.name,
                 lastName: req.body.lastName,
                 username: req.body.username,

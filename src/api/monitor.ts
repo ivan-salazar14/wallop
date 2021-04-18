@@ -1,27 +1,36 @@
 
 import { Router } from 'express';
-import coinController from '../domain/services/market';
-import monitorController from '../domain/services/monitor';
+import coinService from '../domain/services/market';
+import monitorService from '../domain/services/monitor';
 import { verify } from "../middleware/checkAuthorization";
 import { validationResult } from 'express-validator';
 const authRouter = Router();
 
+//endpoint to get all coins availables.
 authRouter.get('/coins',
     verify,
     async (req, res) => {
         try {
-            const market = await coinController.getMarket(req['user'].prefer_coin, Number(req.query.page), Number(req.query.per_page));
+            const market = await coinService.getMarket(req['user'].prefer_coin, Number(req.query.page), Number(req.query.per_page));
             return res.send(market);
         } catch (error) {
             return res.status(422).json({ errors: error });
         }
 
     });
-authRouter.get('/follow',
+
+/*
+Endpoint to get the top  coins by user with filters 
+
+@params quantity : quantity of coins to be listed.
+@params order: asc/desc listed.
+*/
+authRouter.get('/follow/:quantity',
     verify,
     async (req, res) => {
         try {
-            const market = await monitorController.following(req['user'].username, Number(req.query.order));
+            let order = req.params.order ? req.params.order : -1;
+            const market = await monitorService.following(req['user'].username, Number(order), Number(req.params.quantity));
             return res.send(market);
 
         } catch (error) {
@@ -30,18 +39,22 @@ authRouter.get('/follow',
 
     })
 
+/*
+Endpoint to follow a coins. 
 
+@params symbol : symbol of coins to be followed.
+*/
 authRouter.post('/follow',
     verify,
-    monitorController.userValidationRules(),
-    monitorController.validate,
+    monitorService.userValidationRules(),
+    monitorService.validate,
     async (req, res) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 return res.status(422).json({ errors: errors.array() });
             }
-            const market = await monitorController.follow({ username: req['user'].username, symbol: req.body.symbol });
+            const market = await monitorService.follow({ username: req['user'].username, symbol: req.body.symbol });
             return res.status(200).json({ message: market });
 
         } catch (error) {
