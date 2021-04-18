@@ -21,12 +21,19 @@ yarn start:dev
 I am separated this application into 5 different layers
 
 Domain.
-    -> models
-    -> Use cases (services)
+```
+        -> models
+
+        -> Use cases (services)
+```
 
 Api (endpoints definitions)
 
 Events ( actions automatically)
+```
+        -> coinList: update periodically the list of coins.
+        -> currencyList: update periodically the list of currencies.
+```
 
 Infrastructure (DbConection).
 
