@@ -10,6 +10,8 @@ connect({ db });
 setInterval(updateCoinsDatabase, Number(process.env.TIME_UPDATE_COINS));
 setInterval(updateCurrenciesDatabase, Number(process.env.TIME_UPDATE_COINS));
 
-app.listen(port, () => {
+var server = app.listen(port, () => {
     console.log(`app listening at http://localhost:${port}`)
 })
+
+module.exports = server

@@ -23,5 +23,9 @@
         "src",
         "tests"
     ],
-    "exclude": []
+    "exclude": [
+        "./src/tests/",
+        "./node_modules/",
+        "./dist/"
+    ],
 }

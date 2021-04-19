@@ -4,21 +4,24 @@
   "description": "Monitor coins prefered by users",
   "main": "src/server.ts",
   "scripts": {
-    "build": "tsc --project ./",
+    "build": "yarn test && tsc --project ./",
     "start:dev": "nodemon src/server.ts",
     "start:prod": "node dist/server.js",
-    "test": "yarn mocha src/test/* --reporter spec"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/test/*.ts'"
   },
   "author": "IvanSalazar",
   "license": "ISC",
   "dependencies": {
+    "@types/chai": "^4.2.16",
     "@types/jest": "^26.0.22",
     "@types/jsonwebtoken": "^8.5.1",
+    "@types/mocha": "^8.2.2",
     "@types/mongoose": "^5.10.4",
     "@types/node": "^14.14.37",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "coingecko-api": "^1.0.10",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
